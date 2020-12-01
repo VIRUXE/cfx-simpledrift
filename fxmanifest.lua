@@ -1,5 +1,5 @@
 fx_version 'cerulean'
-games { 'gta5' }
+game 'gta5'
 
 author 'Deli'
 description 'FiveM drift script'
