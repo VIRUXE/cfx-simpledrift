@@ -41,5 +41,5 @@ end)
 
 
 -- Function
-function GetPed() return GetPlayerPed(-1) end
-function GetCar() return GetVehiclePedIsIn(GetPlayerPed(-1),false) end
+function GetPed() return PlayerPedId() end
+function GetCar() return GetVehiclePedIsIn(PlayerPedId(),false) end
