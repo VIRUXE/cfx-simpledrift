@@ -29,11 +29,9 @@ RegisterCommand('driftmode', function()
 	if not driftMode then
 		SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), true)
 		driftMode = true
-		print("on")
 	else
 		SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), false)
 		driftMode = false
-		print("off")
 	end
 end)
 
