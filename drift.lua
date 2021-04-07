@@ -1,9 +1,6 @@
 local kmh = 3.6
 local mph = 2.23693629
 local carspeed = 0
------------------
---   E D I T   --
------------------
 local driftmode = true -- on/off speed
 local speed = kmh -- or mph
 local drift_speed_limit = 1000.0 
