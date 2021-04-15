@@ -7,7 +7,7 @@ local driftMode
 -- Thread
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(970)
+		Citizen.Wait(250)
 		if not driftMode then
 			if IsPedInAnyVehicle(PlayerPedId(), false) then
 				carSpeed = GetEntitySpeed(GetVehiclePedIsIn(PlayerPedId())) * speed
