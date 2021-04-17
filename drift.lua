@@ -1,36 +1,22 @@
-local kmh = 3.6
-local mph = 2.23693629
-local carspeed = 0
------------------
---   E D I T   --
------------------
-local driftmode = true -- on/off speed
+local kmh, mph = 3.6, 2.23693629
+local carSpeed = 0
 local speed = kmh -- or mph
-local drift_speed_limit = 1000.0 
-local toggle = 118 -- Numpad 9
+local speedLimit = 1000.0 
+local driftMode
 
 -- Thread
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(250)
-		if IsControlJustPressed(1, 118) then
-			driftmode = not driftmode
-			if driftmode then
-				TriggerEvent("chatMessage", 'DRIFT', { 255,255,255}, '^2ON')
-			else
-				TriggerEvent("chatMessage", 'DRIFT', { 255,255,255}, '^1OFF')
-			end
-		end
-
-		if driftmode then
-			if IsPedInAnyVehicle(GetPed(), false) then
-				CarSpeed = GetEntitySpeed(GetCar()) * speed
-				if GetPedInVehicleSeat(GetCar(), -1) == GetPed() then
-					if CarSpeed <= drift_speed_limit then  
-						if IsControlPressed(1, 21) then
-							SetVehicleReduceGrip(GetCar(), true)
+		if not driftMode then
+			if IsPedInAnyVehicle(PlayerPedId(), false) then
+				carSpeed = GetEntitySpeed(GetVehiclePedIsIn(PlayerPedId())) * speed
+				if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId() then
+					if (carSpeed <= speedLimit) then  
+						if IsControlPressed(0, 21) then
+							SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), true)
 						else
-							SetVehicleReduceGrip(GetCar(), false)
+							SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), false)
 						end
 					end
 				end
@@ -39,7 +25,14 @@ Citizen.CreateThread(function()
 	end
 end)
 
+RegisterCommand('driftmode', function()
+	if not driftMode then
+		SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), true)
+		driftMode = true
+	else
+		SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), false)
+		driftMode = false
+	end
+end)
 
--- Function
-function GetPed() return PlayerPedId() end
-function GetCar() return GetVehiclePedIsIn(PlayerPedId(),false) end
+RegisterKeyMapping('driftmode', 'Toggle driftmode', 'keyboard', 'k')
