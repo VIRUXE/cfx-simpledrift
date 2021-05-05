@@ -1,24 +1,21 @@
 local kmh, mph = 3.6, 2.23693629
-local carSpeed = 0
-local speed = kmh -- or mph
+local speedUnit = kmh -- or mph
 local speedLimit = 1000.0 
-local driftMode
 
--- Thread
+local driftMode = false
+local driftKey, activationKey = 21, 'k' -- LEFT SHIFT
+
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(250)
-		if not driftMode then
-			if IsPedInAnyVehicle(PlayerPedId(), false) then
-				carSpeed = GetEntitySpeed(GetVehiclePedIsIn(PlayerPedId())) * speed
-				if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId() then
-					if (carSpeed <= speedLimit) then  
-						if IsControlPressed(0, 21) then
-							SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), true)
-						else
-							SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), false)
-						end
-					end
+		Citizen.Wait(500) -- I find it easier to control with this delay. Specially around corners.
+
+		if driftMode then
+			local pPed 		= PlayerPedId()
+			local pVehicle 	= GetVehiclePedIsIn(pPed, false)
+
+			if pVehicle and GetPedInVehicleSeat(pVehicle, -1) == pPed then -- Is player the one driving
+				if ((GetEntitySpeed(pVehicle) * speedUnit) <= speedLimit) then -- Check if within "limit"
+					SetVehicleReduceGrip(pVehicle, IsControlPressed(0, driftKey))
 				end
 			end
 		end
@@ -26,13 +23,13 @@ Citizen.CreateThread(function()
 end)
 
 RegisterCommand('driftmode', function()
-	if not driftMode then
-		SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), true)
-		driftMode = true
-	else
-		SetVehicleReduceGrip(GetVehiclePedIsIn(PlayerPedId(), false), false)
-		driftMode = false
-	end
+	driftMode = not driftMode
+	
+	TriggerEvent('chat:addMessage', {
+		color = { 255, 0, 0},
+		multiline = true,
+		args = {"SERVER ", string.format("Drift Mode is %s", (driftMode and "ON" or "OFF"))}
+	  })
 end)
 
-RegisterKeyMapping('driftmode', 'Toggle driftmode', 'keyboard', 'k')
+RegisterKeyMapping('driftmode', 'Toggle Drift Mode', 'keyboard', activationKey)
