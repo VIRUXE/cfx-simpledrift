@@ -1,7 +1,8 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'HypeLevels'
+author 'Deli'
 description 'A really simple way to drift'
+version '1.2'
 
 client_script 'drift.lua'
