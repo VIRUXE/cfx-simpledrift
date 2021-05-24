@@ -1,5 +1,4 @@
-local kmh, mph = 3.6, 2.23693629
-local speedUnit = kmh -- or mph
+local speedUnit = kmh --/mph
 local speedLimit = 1000.0 
 
 local driftMode = false
@@ -14,7 +13,7 @@ Citizen.CreateThread(function()
 			local pVehicle 	= GetVehiclePedIsIn(pPed, false)
 
 			if pVehicle and GetPedInVehicleSeat(pVehicle, -1) == pPed then -- Is player the one driving
-				if ((GetEntitySpeed(pVehicle) * speedUnit) <= speedLimit) then -- Check if within "limit"
+				if ((GetEntitySpeed(pVehicle) * (speedUnit == 'kmh' and 3.6 or 2.23693629)) <= speedLimit) then -- Check if within "limit"
 					SetVehicleReduceGrip(pVehicle, IsControlPressed(0, driftKey))
 				end
 			end
