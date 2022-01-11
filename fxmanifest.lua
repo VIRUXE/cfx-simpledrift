@@ -1,5 +1,5 @@
 fx_version 'cerulean'
-game 'gta5'
+game 'common'
 
 author 'Deli'
 description 'A really simple way to drift'
